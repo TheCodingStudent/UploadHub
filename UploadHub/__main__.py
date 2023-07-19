@@ -116,9 +116,9 @@ class NewPackage(ttk.Window):
         self.push_git = ttk.Combobox(git_frame, width=10, values=options, state='readonly')
         self.push_git.grid(row=1, column=1, sticky='w', padx=10, pady=(5, 0))
         self.push_git.current(0)
-        ttk.Label(git_frame, text='Push Git repository ').grid(row=1, column=0, sticky='w', padx=10, pady=(5, 0))
+        ttk.Label(git_frame, text='Git repository mode').grid(row=2, column=0, sticky='w', padx=10, pady=(5, 0))
         self.mode_git = ttk.Combobox(git_frame, width=10, values=modes, state='readonly')
-        self.mode_git.grid(row=1, column=1, sticky='w', padx=10, pady=(5, 0))
+        self.mode_git.grid(row=2, column=1, sticky='w', padx=10, pady=(5, 0))
         self.mode_git.current(0)
         ttk.Label(git_frame, text='Git first commit ').grid(row=3, column=0, sticky='w', padx=10, pady=5)
         self.commit_git = ttk.Entry(git_frame, width=70)
@@ -202,11 +202,14 @@ class NewPackage(ttk.Window):
         # CREATE GIT REPOSITORY
         if add_git != 'Yes': return self.status_bar.info('Package successfully created...')
         if not (commit_git := self.check_entry(self.commit_git)): return
+        self.status_bar.set('Creating repository...')
         subprocess.check_output(['git', 'init'])
         subprocess.check_output(['git', 'add', '.'])
         subprocess.check_output(['git', 'commit', '-m', commit_git])
         if push_git != 'Yes': return self.status_bar.info('Repository successfully created...')
+        self.status_bar.set('Uploadind repository...')
         subprocess.check_output(['gh', 'repo', 'create', package_name, f'--{mode_git}', '--push'])
+        self.status_bar.info('Repository successfully uploaded...')
     
     def check_entry(self, entry: ttk.Entry) -> str|None:
         if not (value := entry.get()):
