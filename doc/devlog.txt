@@ -1,0 +1,8 @@
+18/07/23
+    8:12pm
+    -   Durante la tarde empece el proyecto pero divague mucho, ahorita estare
+        trabajando en las interfaz para crear un nuevo package
+    -   Funciones
+        *   Asignar nombre y demas datos
+        *   Crear la estructura de archivos
+        *   Dar opcion de crear repositorio de GitHub
