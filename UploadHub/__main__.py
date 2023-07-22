@@ -1,7 +1,8 @@
 import os
-import subprocess
+import json
+import time
 import argparse
-import threading
+import subprocess
 import ttkbootstrap as ttk
 from tkinter.filedialog import askdirectory
 from ttkbootstrap.dialogs import Messagebox
@@ -13,11 +14,12 @@ args = parser.parse_args()
 mode = args.mode
 
 
-def thread_it(func):
-    def wrapper(*args, **kwargs):
-        thread = threading.Thread(target=func, daemon=True, args=args, kwargs=kwargs)
-        thread.start()
-    return wrapper
+def load_config() -> dict:
+    config_path = os.path.dirname(__file__)
+    config_path = os.path.join(config_path, 'config.json')
+    with open(config_path, 'r') as f:
+        config = json.load(f)
+    return config
 
 
 class StatusBar(ttk.Frame):
@@ -70,6 +72,9 @@ class NewPackage(ttk.Window):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+        # CONFIG
+        self.config = load_config()
+
         # VARIABLES
         options = ['No', 'Yes']
         modes = ['Public', 'Private']
@@ -89,41 +94,44 @@ class NewPackage(ttk.Window):
         ttk.Label(info_frame, text='Package version').grid(row=2, column=0, sticky='w', padx=10, pady=(5, 0))
         self.version = ttk.Entry(info_frame, width=70)
         self.version.grid(row=2, column=1, sticky='w', padx=10, pady=(5, 0))
-        self.version.insert(0, '0.0.1')
+        self.version.insert(0, self.config['version'])
         ttk.Label(info_frame, text='Package description').grid(row=3, column=0, sticky='w', padx=10, pady=5)
         self.description = ttk.Entry(info_frame, width=70)
         self.description.grid(row=3, column=1, sticky='w', padx=10, pady=5)
-        self.description.insert(0, '...')
 
         user_frame = ttk.LabelFrame(self, text='User Info')
         user_frame.pack(expand=True, fill='x', padx=10, pady=10)
         ttk.Label(user_frame, text='Package author').grid(row=0, column=0, sticky='w', padx=10, pady=(5, 0))
         self.author = ttk.Entry(user_frame, width=70)
         self.author.grid(row=0, column=1, sticky='w', padx=10, pady=(5, 0))
-        self.author.insert(0, 'Anonymous')
+        self.author.insert(0, self.config['author'])
         ttk.Label(user_frame, text='Package mail').grid(row=1, column=0, sticky='w', padx=10, pady=5)
         self.mail = ttk.Entry(user_frame, width=70)
         self.mail.grid(row=1, column=1, sticky='w', padx=10, pady=5)
-        self.mail.insert(0, '...')
+        self.mail.insert(0, self.config['mail'])
 
         git_frame = ttk.LabelFrame(self, text='Git Info')
         git_frame.pack(expand=True, fill='x', padx=10, pady=10)
-        ttk.Label(git_frame, text='Create Git repository ').grid(row=0, column=0, sticky='w', padx=10, pady=(5, 0))
+        ttk.Label(git_frame, text='Git username').grid(row=0, column=0, sticky='w', padx=10, pady=5)
+        self.user_git = ttk.Entry(git_frame, width=70)
+        self.user_git.grid(row=0, column=1, sticky='w', padx=10, pady=5)
+        self.user_git.insert(0, self.config['gituser'])
+        ttk.Label(git_frame, text='Create Git repository ').grid(row=1, column=0, sticky='w', padx=10, pady=(5, 0))
         self.add_git = ttk.Combobox(git_frame, width=10, values=options, state='readonly')
-        self.add_git.grid(row=0, column=1, sticky='w', padx=10, pady=(5, 0))
+        self.add_git.grid(row=1, column=1, sticky='w', padx=10, pady=(5, 0))
         self.add_git.current(0)
-        ttk.Label(git_frame, text='Push Git repository ').grid(row=1, column=0, sticky='w', padx=10, pady=(5, 0))
+        ttk.Label(git_frame, text='Push Git repository ').grid(row=2, column=0, sticky='w', padx=10, pady=(5, 0))
         self.push_git = ttk.Combobox(git_frame, width=10, values=options, state='readonly')
-        self.push_git.grid(row=1, column=1, sticky='w', padx=10, pady=(5, 0))
+        self.push_git.grid(row=2, column=1, sticky='w', padx=10, pady=(5, 0))
         self.push_git.current(0)
-        ttk.Label(git_frame, text='Git repository mode').grid(row=2, column=0, sticky='w', padx=10, pady=(5, 0))
+        ttk.Label(git_frame, text='Git repository mode').grid(row=3, column=0, sticky='w', padx=10, pady=(5, 0))
         self.mode_git = ttk.Combobox(git_frame, width=10, values=modes, state='readonly')
-        self.mode_git.grid(row=2, column=1, sticky='w', padx=10, pady=(5, 0))
+        self.mode_git.grid(row=3, column=1, sticky='w', padx=10, pady=(5, 0))
         self.mode_git.current(0)
-        ttk.Label(git_frame, text='Git first commit ').grid(row=3, column=0, sticky='w', padx=10, pady=5)
+        ttk.Label(git_frame, text='Git first commit ').grid(row=4, column=0, sticky='w', padx=10, pady=5)
         self.commit_git = ttk.Entry(git_frame, width=70)
-        self.commit_git.grid(row=3, column=1, sticky='w', padx=10, pady=5)
-        self.commit_git.insert(0, 'First commit')
+        self.commit_git.grid(row=4, column=1, sticky='w', padx=10, pady=5)
+        self.commit_git.insert(0, self.config['commit'])
 
         create_button = ttk.Button(self, text='Create new package...', bootstyle='success', command=self.create_package)
         create_button.pack(expand=True, fill='x', padx=10, pady=10)
@@ -187,6 +195,7 @@ class NewPackage(ttk.Window):
         add_git = self.add_git.get()
         push_git = self.push_git.get()
         mode_git = self.mode_git.get().lower()
+        user_git = self.user_git.get()
 
         # CREATE STRUCTURE
         package_folder = f'{package_dir}/{package_name}'
@@ -198,19 +207,27 @@ class NewPackage(ttk.Window):
         if not os.path.isdir(inner_folder): os.mkdir(inner_folder)
         open(f'{inner_folder}/__init__.py', 'w').close()
         open(f'{inner_folder}/__main__.py', 'w').close()
+        # time.sleep(5)
 
         # CREATE GIT REPOSITORY
         if add_git != 'Yes': return self.status_bar.info('Package successfully created...')
         if not (commit_git := self.check_entry(self.commit_git)): return
         self.status_bar.set('Creating repository...')
-        subprocess.check_output(['git', 'init'])
-        subprocess.check_output(['git', 'add', '.'])
-        subprocess.check_output(['git', 'commit', '-m', commit_git])
+        self.run('git init', package_folder)
+        self.run('git add .', package_folder)
+        subprocess.run(['git', 'commit', '-m', f'"{commit_git}"'], cwd=package_folder)
+        self.run('git branch -M main', package_folder)
+        self.run('git branch', package_folder)
         if push_git != 'Yes': return self.status_bar.info('Repository successfully created...')
         self.status_bar.set('Uploadind repository...')
-        subprocess.check_output(['gh', 'repo', 'create', package_name, f'--{mode_git}', '--push'])
+        self.run(f'gh repo create {package_name} --{mode_git}', package_folder)
+        self.run(f'git remote add origin https://github.com/{user_git}/{package_name}.git', package_folder)
+        self.run('git push -u origin main', package_folder)
         self.status_bar.info('Repository successfully uploaded...')
     
+    def run(self, command: str, cwd: str) -> None:
+        subprocess.run(command.split(' '), cwd=cwd)
+
     def check_entry(self, entry: ttk.Entry) -> str|None:
         if not (value := entry.get()):
             entry.config(bootstyle='danger')

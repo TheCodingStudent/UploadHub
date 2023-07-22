@@ -6,3 +6,10 @@
         *   Asignar nombre y demas datos
         *   Crear la estructura de archivos
         *   Dar opcion de crear repositorio de GitHub
+
+22/07/23
+    12:54pm
+    -   Resulta que todo este tiempo funcionaba el comando para crear un
+        repositorio remoto pero al momento de darle la direccion de donde
+        ejecutar el comando habia una coma que no habia visto.
+        Ya pobre el sistema y parece funcionar bastante bien
