@@ -1,7 +1,7 @@
 import os
 import subprocess
 import ttkbootstrap as ttk
-from utils import StatusBar
+from .utils import StatusBar
 from tkinter.filedialog import askdirectory
 
 
