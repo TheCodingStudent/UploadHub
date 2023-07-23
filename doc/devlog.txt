@@ -13,3 +13,13 @@
         repositorio remoto pero al momento de darle la direccion de donde
         ejecutar el comando habia una coma que no habia visto.
         Ya pobre el sistema y parece funcionar bastante bien
+
+    11:02pm
+    -   Ahora separe las clases en archivos por separado
+    -   Se me olvido que existia este documento para llevar el historial
+    -   Ahora hay una configuracion que se guarda para ergonomia
+    -   Ya funciona la creacion de paquetes
+    -   Ya funciona subir paquetes a GitHub
+    -   Ya funciona la configuracion, solo falta añadir alguna interfaz para
+        iniciar las variables
+    -   Procedo a subir a Pypi
