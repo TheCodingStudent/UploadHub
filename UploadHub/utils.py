@@ -7,7 +7,7 @@ from ttkbootstrap.dialogs import Messagebox
 def load_config() -> dict:
     """Loads the json file for configuration"""
     config_path = os.path.dirname(__file__)
-    config_path = os.path.join(config_path, 'config.json')
+    config_path = os.path.join(config_path, 'data/config.json')
     with open(config_path, 'r') as f:
         config = json.load(f)
     return config
@@ -16,7 +16,7 @@ def load_config() -> dict:
 def save_config(config: dict) -> None:
     """Saves the json file for configuration"""
     config_path = os.path.dirname(__file__)
-    config_path = os.path.join(config_path, 'config.json')
+    config_path = os.path.join(config_path, 'data/config.json')
     with open(config_path, 'r') as f:
         json.dump(config, f, indent=4)
 

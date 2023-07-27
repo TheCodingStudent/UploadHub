@@ -23,3 +23,9 @@
     -   Ya funciona la configuracion, solo falta añadir alguna interfaz para
         iniciar las variables
     -   Procedo a subir a Pypi
+
+    11:15pm
+    -   Ha sido subido la version 0.0.2 y ya funciona al parecer, hasta falta
+        probarlo mas y ver la ergonomia
+    -   Ya esta en Pypi y GitHub
+    -   Creo que no hay mas que hacerle al proyecto mas que darle mis bendiciones
