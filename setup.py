@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-VERSION = '0.0.4'
+VERSION = '0.0.5'
 DESCRIPTION = 'PYPI and GitHub package uploader.'
 LONG_DESCRIPTION = 'Manages all the commands to upload a package to PYPI and GitHub repo.'
 

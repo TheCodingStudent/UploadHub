@@ -150,13 +150,6 @@ class UploadPackage(ttk.Window):
         upload_pypi = self.upload_pypi.get()
         dist_folder = os.path.join(package_dir, 'dist')
 
-        # UPDATE GIT REPOSITORY IF NEEDED
-        if push_git == 'Yes':
-            if not (commit_git := self.check_entry(self.commit_git)): return
-            self.run('git add .', package_dir)
-            subprocess.run(['git', 'commit', '-m', f'"{commit_git}"'], cwd=package_dir)
-            self.run('git push', package_dir)
-
         # DELETE PREVIOUS VERSIONS IF NEEDED
         if delete_past == 'Yes' and os.path.isdir(dist_folder):
             for file in os.listdir(dist_folder):
@@ -174,4 +167,11 @@ class UploadPackage(ttk.Window):
             self.run('python setup.py sdist bdist_wheel', package_dir)
             self.run('twine upload dist/*', package_dir)
         
+        # UPDATE GIT REPOSITORY IF NEEDED
+        if push_git == 'Yes':
+            if not (commit_git := self.check_entry(self.commit_git)): return
+            self.run('git add .', package_dir)
+            subprocess.run(['git', 'commit', '-m', f'"{commit_git}"'], cwd=package_dir)
+            self.run('git push', package_dir)
+
         self.status_bar.info('Package successfully uploaded...')
