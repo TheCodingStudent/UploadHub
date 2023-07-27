@@ -13,3 +13,4 @@ UploadHub.egg-info/SOURCES.txt
 UploadHub.egg-info/dependency_links.txt
 UploadHub.egg-info/requires.txt
 UploadHub.egg-info/top_level.txt
+UploadHub/data/config.json

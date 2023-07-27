@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-VERSION = '0.0.3'
+VERSION = '0.0.4'
 DESCRIPTION = 'PYPI and GitHub package uploader.'
 LONG_DESCRIPTION = 'Manages all the commands to upload a package to PYPI and GitHub repo.'
 
@@ -24,5 +24,5 @@ setup(
         "Operating System :: Microsoft :: Windows",
     ],
     include_package_data=True,
-    package_data={'': ['data/*.csv']}
+    package_data={'': ['data/*.json']}
 )
