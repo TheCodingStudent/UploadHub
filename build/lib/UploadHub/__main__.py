@@ -1,6 +1,6 @@
 import argparse
-from .new import NewPackage
-from .upload import UploadPackage
+from UploadHub.new import NewPackage
+from UploadHub.upload import UploadPackage
 
 # TERMINAL ARGUMENTS
 parser = argparse.ArgumentParser(prog='UploadHub', description='Manages package uploads')

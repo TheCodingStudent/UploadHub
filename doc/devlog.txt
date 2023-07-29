@@ -29,3 +29,7 @@
         probarlo mas y ver la ergonomia
     -   Ya esta en Pypi y GitHub
     -   Creo que no hay mas que hacerle al proyecto mas que darle mis bendiciones
+
+29/07/23
+    3:18pm
+    -   Agregue la opcion para que se actualice el modulo con pip install --upgrade
