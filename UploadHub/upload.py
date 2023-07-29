@@ -1,7 +1,7 @@
 import os
 import subprocess
 import ttkbootstrap as ttk
-from .utils import StatusBar
+from UploadHub.utils import StatusBar
 from tkinter.filedialog import askdirectory
 
 
@@ -10,7 +10,7 @@ class UploadPackage(ttk.Window):
         super().__init__(**kwargs)
 
         # VARIABLES
-        options = ['No', 'Yes']
+        options = ['Yes', 'No']
 
         # USER INTERFACE
         package_frame = ttk.LabelFrame(self, text='package Info')
@@ -44,11 +44,11 @@ class UploadPackage(ttk.Window):
         ttk.Label(files_frame, text='Delete past version').grid(row=0, column=0, sticky='w', padx=10, pady=(5, 0))
         self.delete_past = ttk.Combobox(files_frame, width=10, values=options, state='readonly')
         self.delete_past.grid(row=0, column=1, sticky='w', padx=10, pady=(5, 0))
-        self.delete_past.current(1)
+        self.delete_past.current(0)
         ttk.Label(files_frame, text='Update version').grid(row=1, column=0, sticky='w', padx=10, pady=5)
         self.update_version = ttk.Combobox(files_frame, width=10, values=options, state='readonly')
         self.update_version.grid(row=1, column=1, sticky='w', padx=10, pady=5)
-        self.update_version.current(1)
+        self.update_version.current(0)
 
         pypi_frame = ttk.LabelFrame(self, text='Pypi Info')
         pypi_frame.pack(expand=True, fill='x', padx=10, pady=10)
@@ -56,6 +56,10 @@ class UploadPackage(ttk.Window):
         self.upload_pypi = ttk.Combobox(pypi_frame, width=10, values=options, state='readonly')
         self.upload_pypi.grid(row=0, column=1, sticky='w', padx=10, pady=5)
         self.upload_pypi.current(0)
+        ttk.Label(pypi_frame, text='Pip install ').grid(row=1, column=0, sticky='w', padx=10, pady=5)
+        self.pip_install = ttk.Combobox(pypi_frame, width=10, values=options, state='readonly')
+        self.pip_install.grid(row=1, column=1, sticky='w', padx=10, pady=5)
+        self.pip_install.current(0)
 
         create_button = ttk.Button(self, text='Upload package...', bootstyle='success', command=self.upload_package)
         create_button.pack(expand=True, fill='x', padx=10, pady=10)
@@ -148,6 +152,7 @@ class UploadPackage(ttk.Window):
         delete_past = self.delete_past.get()
         update_version = self.update_version.get()
         upload_pypi = self.upload_pypi.get()
+        pip_install = self.pip_install.get()
         dist_folder = os.path.join(package_dir, 'dist')
 
         # DELETE PREVIOUS VERSIONS IF NEEDED
@@ -173,5 +178,16 @@ class UploadPackage(ttk.Window):
             self.run('git add .', package_dir)
             subprocess.run(['git', 'commit', '-m', f'"{commit_git}"'], cwd=package_dir)
             self.run('git push', package_dir)
+        
+        # UPGRADE PACKAGE
+        if pip_install == 'Yes':
+            package_name = package_dir.split('/')[-1]
+            self.run(f'pip install {package_name} --upgrade')
+            self.run(f'pip install {package_name} --upgrade')
 
         self.status_bar.info('Package successfully uploaded...')
+
+
+if __name__ == '__main__':
+    window = UploadPackage()
+    window.mainloop()
