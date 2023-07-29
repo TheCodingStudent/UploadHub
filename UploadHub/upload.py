@@ -182,8 +182,8 @@ class UploadPackage(ttk.Window):
         # UPGRADE PACKAGE
         if pip_install == 'Yes':
             package_name = package_dir.split('/')[-1]
-            self.run(f'pip install {package_name} --upgrade')
-            self.run(f'pip install {package_name} --upgrade')
+            self.run(f'pip install {package_name} --upgrade', cwd=package_dir)
+            self.run(f'pip install {package_name} --upgrade', cwd=package_dir)
 
         self.status_bar.info('Package successfully uploaded...')
 
